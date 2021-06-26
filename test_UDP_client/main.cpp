@@ -30,7 +30,7 @@ string convertToString(char* a, int size)
 	return s;
 }
 
-void receiv_video(Client_UDP client)
+void receiv_video(Client_UDP client) //Функция для приема видео с сервера
 {
 	cv::Mat frame;
 	frame = cv::imread("D:/wtf11.jpg", 1);
@@ -68,18 +68,16 @@ int main()
 	Client_UDP client_UDP;
 	Client_TCP client_TCP;
 
-	//thread recProc(&Client_TCP::recvData, &client_TCP);
-
 	while (true)
 	{
-		//SEND
+		//SEND //Отправка сообщений
 		std::string msg1;
 		std::getline(std::cin, msg1);
 		int msg_size1 = msg1.size();
 		client_TCP.sendData((char*)&msg_size1, sizeof(int));
 		client_TCP.sendData(msg1.c_str(), msg_size1);
 
-		//RECEIV
+		//RECEIV //Прием сообщений
 		int msg_size;
 		client_TCP.recvData((char*)&msg_size, sizeof(int));
 		char *msg = new char[msg_size + 1];
@@ -89,7 +87,7 @@ int main()
 				  << " (size: " << msg_size << ")"
 				  << std::endl;
 		string command = convertToString(msg, msg_size);
-		if (command == "Start send video")
+		if (command == "Start send video") //Начать прием видео
 		{
 			std::thread video(receiv_video, client_UDP);
 			video.detach();
